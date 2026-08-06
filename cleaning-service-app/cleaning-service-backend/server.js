@@ -1,5 +1,4 @@
 const express = require("express");
-const cors = require("cors");
 const dotenv = require("dotenv");
 
 // Load environment variables
@@ -13,7 +12,6 @@ const app = express();
 testConnection();
 
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
