@@ -1,15 +1,22 @@
 const {
     getAllBookings,
     getBookingById: getBookingByIdModel,
+    getBookingsByUserId,
     createBooking: createBookingModel,
     updateBooking: updateBookingModel,
     deleteBooking: deleteBookingModel,
 } = require("../models/Booking");
 
-// Get all bookings
+// Get all bookings (optional filter by user_id query param)
 const getBookings = async (req, res) => {
     try {
-        const bookings = await getAllBookings();
+        const userId = req.query.user_id || req.query.customer_id;
+        let bookings;
+        if (userId) {
+            bookings = await getBookingsByUserId(userId);
+        } else {
+            bookings = await getAllBookings();
+        }
         res.json(bookings);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -32,8 +39,15 @@ const getBookingById = async (req, res) => {
 // Create booking
 const createBooking = async (req, res) => {
     try {
+        const { user_id, customer_id, service_id, booking_date, booking_time, address } = req.body;
+        
+        if ((!user_id && !customer_id) || !service_id || !booking_date || !booking_time || !address) {
+            return res.status(400).json({ message: "Service, date, time, and address are required to book." });
+        }
+
         const id = await createBookingModel(req.body);
-        res.status(201).json({ id, message: "Booking created" });
+        const created = await getBookingByIdModel(id);
+        res.status(201).json({ id, message: "Booking created successfully", booking: created, data: created });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -42,8 +56,9 @@ const createBooking = async (req, res) => {
 // Update booking
 const updateBooking = async (req, res) => {
     try {
-        await updateBookingModel(req.params.id, req.body.status);
-        res.json({ message: "Booking updated" });
+        await updateBookingModel(req.params.id, req.body);
+        const updated = await getBookingByIdModel(req.params.id);
+        res.json({ message: "Booking updated successfully", booking: updated, data: updated });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -53,7 +68,7 @@ const updateBooking = async (req, res) => {
 const deleteBooking = async (req, res) => {
     try {
         await deleteBookingModel(req.params.id);
-        res.json({ message: "Booking deleted" });
+        res.json({ message: "Booking deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -66,3 +81,4 @@ module.exports = {
     updateBooking,
     deleteBooking,
 };
+

@@ -1,8 +1,26 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../services/api";
+import ServiceCard from "../components/ServiceCard";
 
 const heroImage = "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1500&q=85";
 
 export default function Home() {
+  const [featuredServices, setFeaturedServices] = useState([]);
+
+  useEffect(() => {
+    const loadFeatured = async () => {
+      try {
+        const response = await api.get("/services");
+        const data = Array.isArray(response.data) ? response.data : response.data?.data || [];
+        setFeaturedServices(data.slice(0, 3));
+      } catch {
+        // Fallback gracefully
+      }
+    };
+    loadFeatured();
+  }, []);
+
   return (
     <>
       <section className="hero">
@@ -27,7 +45,30 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section section-white" id="about">
+      {/* Featured Services from Database */}
+      {featuredServices.length > 0 && (
+        <section className="section section-white">
+          <div className="container">
+            <div className="page-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1rem" }}>
+              <div>
+                <span className="eyebrow">Popular Solutions</span>
+                <h2>Featured Cleaning Services</h2>
+                <p>Top-rated services ready for immediate booking.</p>
+              </div>
+              <Link to="/services" className="btn btn-secondary">
+                View All Services →
+              </Link>
+            </div>
+            <div className="service-grid" style={{ marginTop: "1.5rem" }}>
+              {featuredServices.map((service) => (
+                <ServiceCard key={service.id || service.service_id} service={service} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="section section-soft" id="about">
         <div className="container">
           <div className="section-heading center">
             <span className="eyebrow">Why CleanPro</span>
@@ -50,7 +91,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section section-soft">
+      <section className="section section-white">
         <div className="container split-section">
           <div>
             <span className="eyebrow">Built for busy people</span>

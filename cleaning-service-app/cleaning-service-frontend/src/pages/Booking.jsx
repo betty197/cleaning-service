@@ -7,14 +7,14 @@ import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
 
 export default function Booking() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [searchParams] = useSearchParams();
   const [services, setServices] = useState([]);
   const [form, setForm] = useState({
     service_id: searchParams.get("service") || "",
     booking_date: "",
     booking_time: "",
-    address: ""
+    address: user?.address || ""
   });
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -36,27 +36,40 @@ export default function Booking() {
     load();
   }, []);
 
+  useEffect(() => {
+    if (user?.address && !form.address) {
+      setForm((prev) => ({ ...prev, address: user.address }));
+    }
+  }, [user?.address]);
+
   const submit = async (event) => {
     event.preventDefault();
     setError("");
     setSuccess("");
 
-    if (!user?.id) {
-      setError("Your authenticated customer ID is unavailable. Add backend authentication before creating a booking.");
+    const userId = user?.id || user?.user_id;
+    if (!userId) {
+      setError("Please log in before creating a booking.");
       return;
     }
 
     setSubmitting(true);
     try {
       await api.post("/bookings", {
-        customer_id: user.id,
+        user_id: userId,
+        customer_id: userId,
         service_id: Number(form.service_id),
         booking_date: form.booking_date,
         booking_time: form.booking_time,
         address: form.address
       });
-      setSuccess("Your booking was submitted successfully.");
-      setForm({ service_id: "", booking_date: "", booking_time: "", address: "" });
+      setSuccess("Your booking was submitted successfully!");
+      setForm({
+        service_id: "",
+        booking_date: "",
+        booking_time: "",
+        address: user?.address || ""
+      });
     } catch (requestError) {
       setError(requestError.response?.data?.message || "Booking could not be created.");
     } finally {
@@ -80,17 +93,58 @@ export default function Booking() {
           <form onSubmit={submit} className="form-grid">
             <label className="form-field full-span">
               <span>Cleaning service</span>
-              <select value={form.service_id} onChange={(e) => setForm({ ...form, service_id: e.target.value })} required>
+              <select
+                value={form.service_id}
+                onChange={(e) => setForm({ ...form, service_id: e.target.value })}
+                required
+              >
                 <option value="">Select a service</option>
-                {services.map((service) => <option value={service.id} key={service.id}>{service.service_name}</option>)}
+                {services.map((service) => (
+                  <option value={service.id || service.service_id} key={service.id || service.service_id}>
+                    {service.service_name} — {service.price} ETB
+                  </option>
+                ))}
               </select>
             </label>
-            <label className="form-field"><span>Booking date</span><input type="date" value={form.booking_date} onChange={(e) => setForm({ ...form, booking_date: e.target.value })} required /></label>
-            <label className="form-field"><span>Booking time</span><input type="time" value={form.booking_time} onChange={(e) => setForm({ ...form, booking_time: e.target.value })} required /></label>
-            <label className="form-field full-span"><span>Cleaning address</span><textarea rows="4" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} required /></label>
-            <button className="btn btn-primary btn-full full-span" disabled={submitting} type="submit">{submitting ? "Submitting..." : "Confirm Booking"}</button>
+            <label className="form-field">
+              <span>Booking date</span>
+              <input
+                type="date"
+                value={form.booking_date}
+                onChange={(e) => setForm({ ...form, booking_date: e.target.value })}
+                required
+              />
+            </label>
+            <label className="form-field">
+              <span>Booking time</span>
+              <input
+                type="time"
+                value={form.booking_time}
+                onChange={(e) => setForm({ ...form, booking_time: e.target.value })}
+                required
+              />
+            </label>
+            <label className="form-field full-span">
+              <span>Cleaning address</span>
+              <textarea
+                rows="3"
+                value={form.address}
+                onChange={(e) => setForm({ ...form, address: e.target.value })}
+                placeholder="Enter your street address, apartment/house number"
+                required
+              />
+            </label>
+            <button className="btn btn-primary btn-full full-span" disabled={submitting} type="submit">
+              {submitting ? "Submitting..." : "Confirm Booking"}
+            </button>
           </form>
-          {success && <Link className="text-link booking-next" to="/my-bookings">View My Bookings →</Link>}
+          {success && (
+            <div style={{ marginTop: "1rem", textAlign: "center" }}>
+              <Link className="text-link booking-next" to="/my-bookings">
+                View My Bookings →
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </section>

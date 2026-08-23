@@ -11,6 +11,8 @@ import Login from "./pages/Login";
 import Booking from "./pages/Booking";
 import MyBookings from "./pages/MyBookings";
 import Profile from "./pages/Profile";
+import Contact from "./pages/Contact";
+import CleanerDashboard from "./pages/CleanerDashboard";
 
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminUsers from "./pages/admin/Users";
@@ -26,6 +28,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
 
@@ -33,6 +36,7 @@ export default function App() {
             <Route path="/booking" element={<Booking />} />
             <Route path="/my-bookings" element={<MyBookings />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/cleaner" element={<CleanerDashboard />} />
           </Route>
 
           <Route element={<AdminRoute />}>

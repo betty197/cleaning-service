@@ -33,7 +33,8 @@ const getServiceById = async (req, res) => {
 const createService = async (req, res) => {
     try {
         const id = await createServiceModel(req.body);
-        res.status(201).json({ id, message: "Service created" });
+        const created = await getServiceByIdModel(id);
+        res.status(201).json({ id, message: "Service created", service: created, data: created });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -43,7 +44,8 @@ const createService = async (req, res) => {
 const updateService = async (req, res) => {
     try {
         await updateServiceModel(req.params.id, req.body);
-        res.json({ message: "Service updated" });
+        const updated = await getServiceByIdModel(req.params.id);
+        res.json({ message: "Service updated", service: updated, data: updated });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -53,7 +55,7 @@ const updateService = async (req, res) => {
 const deleteService = async (req, res) => {
     try {
         await deleteServiceModel(req.params.id);
-        res.json({ message: "Service deleted" });
+        res.json({ message: "Service deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -66,3 +68,4 @@ module.exports = {
     updateService,
     deleteService,
 };
+

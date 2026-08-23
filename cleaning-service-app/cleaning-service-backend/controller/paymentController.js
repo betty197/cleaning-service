@@ -32,8 +32,14 @@ const getPaymentById = async (req, res) => {
 // Create payment
 const createPayment = async (req, res) => {
     try {
+        const { booking_id, amount } = req.body;
+        if (!booking_id || amount === undefined) {
+            return res.status(400).json({ message: "Booking ID and amount are required." });
+        }
+
         const id = await createPaymentModel(req.body);
-        res.status(201).json({ id, message: "Payment created" });
+        const created = await getPaymentByIdModel(id);
+        res.status(201).json({ id, message: "Payment created successfully", payment: created, data: created });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -42,8 +48,9 @@ const createPayment = async (req, res) => {
 // Update payment
 const updatePayment = async (req, res) => {
     try {
-        await updatePaymentModel(req.params.id, req.body.payment_status);
-        res.json({ message: "Payment updated" });
+        await updatePaymentModel(req.params.id, req.body);
+        const updated = await getPaymentByIdModel(req.params.id);
+        res.json({ message: "Payment updated successfully", payment: updated, data: updated });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -53,7 +60,7 @@ const updatePayment = async (req, res) => {
 const deletePayment = async (req, res) => {
     try {
         await deletePaymentModel(req.params.id);
-        res.json({ message: "Payment deleted" });
+        res.json({ message: "Payment deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -65,4 +72,4 @@ module.exports = {
     createPayment,
     updatePayment,
     deletePayment,
-};
+};

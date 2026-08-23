@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import FormInput from "../components/FormInput";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
@@ -8,6 +8,7 @@ import SuccessMessage from "../components/SuccessMessage";
 
 export default function Register() {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [form, setForm] = useState({
     full_name: "", email: "", phone: "", password: "", address: ""
   });
@@ -29,9 +30,11 @@ export default function Register() {
 
     setLoading(true);
     try {
-      await api.post("/users", form);
-      setSuccess("Account created successfully. You can continue to the login page once backend authentication is available.");
-      setForm({ full_name: "", email: "", phone: "", password: "", address: "" });
+      await register(form);
+      setSuccess("Account created successfully! Redirecting...");
+      setTimeout(() => {
+        navigate("/booking", { replace: true });
+      }, 1200);
     } catch (requestError) {
       const message = requestError.response?.data?.message;
       setError(message || "Registration failed. Please check your information and try again.");
@@ -46,7 +49,7 @@ export default function Register() {
         <div className="auth-copy">
           <span className="eyebrow">Join CleanPro</span>
           <h1>Create your account</h1>
-          <p>Register your customer profile so your information can be used by the booking system.</p>
+          <p>Register your customer profile to schedule cleaning appointments easily.</p>
         </div>
         <form onSubmit={submit} className="form-grid">
           <FormInput label="Full name" name="full_name" value={form.full_name} onChange={update} placeholder="Your full name" required />
@@ -60,8 +63,8 @@ export default function Register() {
             {loading ? "Creating account..." : "Create Account"}
           </button>
         </form>
-        {loading && <LoadingSpinner text="Sending registration..." />}
-        <p className="auth-footer">Already registered? <Link to="/login">Open login</Link></p>
+        {loading && <LoadingSpinner text="Registering your account..." />}
+        <p className="auth-footer">Already registered? <Link to="/login">Sign in here</Link></p>
       </div>
     </section>
   );

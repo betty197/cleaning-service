@@ -38,9 +38,10 @@ export default function Navbar() {
         <nav className={`main-nav ${open ? "is-open" : ""}`}>
           <NavLink to="/" onClick={close}>Home</NavLink>
           <NavLink to="/services" onClick={close}>Services</NavLink>
-          <a href="/#about" onClick={close}>About</a>
+          <NavLink to="/contact" onClick={close}>Contact</NavLink>
           <NavLink className="nav-book" to="/booking" onClick={close}>Book Now</NavLink>
-          {isAuthenticated && <NavLink to="/my-bookings" onClick={close}>My Bookings</NavLink>}
+          {isAuthenticated && user?.role === "customer" && <NavLink to="/my-bookings" onClick={close}>My Bookings</NavLink>}
+          {isAuthenticated && user?.role === "cleaner" && <NavLink to="/cleaner" onClick={close}>Jobs Schedule</NavLink>}
           {isAuthenticated && <NavLink to="/profile" onClick={close}>Profile</NavLink>}
           {!isAuthenticated && <NavLink to="/login" onClick={close}>Login</NavLink>}
           {!isAuthenticated && <NavLink className="nav-register" to="/register" onClick={close}>Register</NavLink>}
