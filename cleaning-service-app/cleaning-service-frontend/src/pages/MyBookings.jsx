@@ -118,14 +118,20 @@ export default function MyBookings() {
         )}
 
         <div className="booking-grid">
-          {bookings.map((booking) => (
-            <BookingCard
-              key={booking.id || booking.booking_id}
-              booking={booking}
-              serviceName={getServiceName(booking)}
-              onPay={handleOpenPayment}
-            />
-          ))}
+          {bookings.map((booking) => {
+            const foundService = services.find(
+              (item) => Number(item.id || item.service_id) === Number(booking.service_id)
+            );
+            return (
+              <BookingCard
+                key={booking.id || booking.booking_id}
+                booking={booking}
+                service={foundService}
+                serviceName={getServiceName(booking)}
+                onPay={handleOpenPayment}
+              />
+            );
+          })}
         </div>
 
         {/* Payment Modal */}

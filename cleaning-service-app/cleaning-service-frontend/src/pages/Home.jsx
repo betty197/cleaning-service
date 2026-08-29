@@ -97,15 +97,56 @@ export default function Home() {
             <span className="eyebrow">Built for busy people</span>
             <h2>More time for what matters.</h2>
             <p>
-              From everyday home cleaning to professional office care, CleanPro gives you a straightforward way to request and manage cleaning services.
+              From everyday home cleaning to professional office care, CleanPro gives you a straightforward way to request and manage cleaning services in just a few clicks.
             </p>
-            <Link className="btn btn-primary" to="/services">Explore Services</Link>
+            <div style={{ marginTop: "24px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
+              <Link className="btn btn-primary" to="/services">Explore Services</Link>
+              <Link className="btn btn-secondary" to="/booking">Book Now →</Link>
+            </div>
           </div>
           <div className="feature-panel">
-            <div><strong>01</strong><span>Choose a service</span></div>
-            <div><strong>02</strong><span>Select your schedule</span></div>
-            <div><strong>03</strong><span>Track your booking</span></div>
-            <div><strong>04</strong><span>Manage payment information</span></div>
+            <div className="feature-item">
+              <span className="feature-num">01</span>
+              <div className="feature-text">
+                <strong>Choose a service</strong>
+                <p>Browse customized cleaning options tailored for homes, apartments, or corporate offices.</p>
+              </div>
+            </div>
+            <div className="feature-item">
+              <span className="feature-num">02</span>
+              <div className="feature-text">
+                <strong>Select your schedule</strong>
+                <p>Pick your preferred appointment date and time slot that fits your routine.</p>
+              </div>
+            </div>
+            <div className="feature-item">
+              <span className="feature-num">03</span>
+              <div className="feature-text">
+                <strong>Track your booking</strong>
+                <p>Monitor assigned cleaners, visit details, and live status in your customer dashboard.</p>
+              </div>
+            </div>
+            <div className="feature-item">
+              <span className="feature-num">04</span>
+              <div className="feature-text">
+                <strong>Manage payment information</strong>
+                <p>Conveniently and securely pay via Telebirr, CBE Birr, Cash on Delivery, or Bank Transfer.</p>
+              </div>
+            </div>
+            <div className="feature-item">
+              <span className="feature-num">05</span>
+              <div className="feature-text">
+                <strong>Professional on-site cleaning</strong>
+                <p>Vetted, trained cleaning specialists arrive with top-grade equipment and supplies.</p>
+              </div>
+            </div>
+            <div className="feature-item">
+              <span className="feature-num">06</span>
+              <div className="feature-text">
+                <strong>Enjoy a spotless space</strong>
+                <p>Relax and enjoy a sparkling, refreshed environment with guaranteed satisfaction.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

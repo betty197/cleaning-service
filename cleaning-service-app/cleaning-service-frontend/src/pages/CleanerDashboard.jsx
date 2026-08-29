@@ -5,6 +5,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
 import StatusBadge from "../components/StatusBadge";
+import { getServiceImage } from "../utils/serviceImages";
 
 export default function CleanerDashboard() {
   const { user } = useAuth();
@@ -74,15 +75,27 @@ export default function CleanerDashboard() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.25rem", marginTop: "1.5rem" }}>
           {bookings.map((item) => {
             const bookingId = item.id || item.booking_id;
+            const imgUrl = getServiceImage({
+              service_name: item.service_name,
+              id: item.service_id,
+              image: item.service_image
+            });
             return (
               <div key={bookingId} className="booking-card" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <div>
-                  <div className="booking-card-head">
-                    <div>
-                      <span className="eyebrow">Job #{bookingId}</span>
-                      <h3>{item.service_name || `Service #${item.service_id}`}</h3>
+                  <div className="booking-card-top-row">
+                    <div className="booking-thumb">
+                      <img src={imgUrl} alt={item.service_name || "Cleaning service"} loading="lazy" />
                     </div>
-                    <StatusBadge status={item.status} />
+                    <div className="booking-card-main-info">
+                      <div className="booking-card-head">
+                        <div>
+                          <span className="eyebrow">Job #{bookingId}</span>
+                          <h3>{item.service_name || `Service #${item.service_id}`}</h3>
+                        </div>
+                        <StatusBadge status={item.status} />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="booking-details">

@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
+import { getServiceImage } from "../utils/serviceImages";
 
 export default function Booking() {
   const { user, isAuthenticated } = useAuth();
@@ -41,6 +42,10 @@ export default function Booking() {
       setForm((prev) => ({ ...prev, address: user.address }));
     }
   }, [user?.address]);
+
+  const selectedService = services.find(
+    (s) => String(s.id || s.service_id) === String(form.service_id)
+  );
 
   const submit = async (event) => {
     event.preventDefault();
@@ -90,6 +95,26 @@ export default function Booking() {
         <div className="form-card">
           <ErrorMessage message={error} />
           <SuccessMessage message={success} />
+
+          {selectedService && (
+            <div className="booking-service-preview">
+              <img
+                src={getServiceImage(selectedService)}
+                alt={selectedService.service_name}
+                className="booking-service-preview-img"
+              />
+              <div className="booking-service-preview-info">
+                <span className="eyebrow">Selected Service</span>
+                <h3>{selectedService.service_name}</h3>
+                <p>{selectedService.description || "Tailored cleaning for your space."}</p>
+                <div className="booking-service-preview-meta">
+                  <strong>{selectedService.price} ETB</strong>
+                  {selectedService.duration_hours && <span>• {selectedService.duration_hours} hours estimated</span>}
+                </div>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={submit} className="form-grid">
             <label className="form-field full-span">
               <span>Cleaning service</span>
