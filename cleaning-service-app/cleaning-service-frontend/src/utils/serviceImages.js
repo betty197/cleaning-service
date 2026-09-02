@@ -10,9 +10,16 @@ export const SERVICE_IMAGE_PRESETS = [
     description: "Everyday residential and home living room cleaning"
   },
   {
+    id: "home_office",
+    name: "Home Office Cleaning",
+    keywords: ["home office", "home-office", "office at home", "workspace", "desk", "study room", "remote work", "executive office"],
+    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
+    description: "Professional cleaning for productive, organized home workspaces"
+  },
+  {
     id: "deep",
     name: "Deep Cleaning",
-    keywords: ["deep", "intensive", "detailed", "spring", "scrub", "complete"],
+    keywords: ["deep", "intensive", "detailed", "spring", "scrub", "complete", "deep clean", "sanitization"],
     image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=900&q=80",
     description: "Intensive deep scrub and sanitization"
   },
@@ -77,9 +84,69 @@ export function getServiceImage(service) {
     return service.image.trim();
   }
 
-  const name = (service?.service_name || service?.name || "").toLowerCase();
+  const rawName = (service?.service_name || service?.name || "").toLowerCase();
   const desc = (service?.description || "").toLowerCase();
-  const text = `${name} ${desc}`;
+  const text = `${rawName} ${desc}`.replace(/[^a-z0-9\s]/g, " ");
+
+  const exactMatches = {
+    home: [
+      "home cleaning",
+      "home & residential cleaning",
+      "residential cleaning",
+      "house cleaning",
+      "apartment cleaning",
+      "home service",
+      "living room cleaning"
+    ],
+    home_office: [
+      "home office cleaning",
+      "home office",
+      "home-office cleaning",
+      "office at home cleaning",
+      "remote work cleaning",
+      "workspace cleaning",
+      "study room cleaning"
+    ],
+    office: [
+      "office cleaning",
+      "office & commercial cleaning",
+      "commercial cleaning",
+      "corporate cleaning",
+      "workplace cleaning",
+      "business cleaning",
+      "desk cleaning"
+    ],
+    deep: [
+      "deep cleaning",
+      "deep clean",
+      "intensive cleaning",
+      "spring cleaning",
+      "detailed cleaning",
+      "complete cleaning",
+      "deep sanitization"
+    ]
+  };
+
+  for (const [presetId, targets] of Object.entries(exactMatches)) {
+    const matchedPreset = SERVICE_IMAGE_PRESETS.find((preset) => preset.id === presetId);
+    if (matchedPreset && targets.some((target) => text.includes(target))) {
+      return matchedPreset.image;
+    }
+  }
+
+  const aliases = {
+    home: ["home", "house", "residential", "apartment", "living", "room", "maid", "general cleaning", "standard cleaning"],
+    home_office: ["home office", "home-office", "office at home", "study room", "workspace", "remote work", "desk area"],
+    office: ["office", "commercial", "corporate", "workplace", "business", "desk", "workspace", "workspace cleaning"],
+    deep: ["deep", "intensive", "detailed", "spring", "scrub", "complete", "sanitization", "deep clean"]
+  };
+
+  for (const [presetId, keywords] of Object.entries(aliases)) {
+    const matchedPreset = SERVICE_IMAGE_PRESETS.find((preset) => preset.id === presetId);
+    if (matchedPreset && keywords.some((keyword) => text.includes(keyword))) {
+      return matchedPreset.image;
+    }
+  }
 
   for (const preset of SERVICE_IMAGE_PRESETS) {
     const isMatch = preset.keywords.some((keyword) => text.includes(keyword));
@@ -88,8 +155,7 @@ export function getServiceImage(service) {
     }
   }
 
-  // If no keyword match, distribute deterministically by ID or service name length
-  const idNum = Number(service?.id || service?.service_id) || name.length || 0;
+  const idNum = Number(service?.id || service?.service_id) || rawName.length || 0;
   const index = Math.abs(idNum) % SERVICE_IMAGE_PRESETS.length;
   return SERVICE_IMAGE_PRESETS[index].image;
 }
