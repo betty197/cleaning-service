@@ -4,8 +4,47 @@ import ServiceCard from "../components/ServiceCard";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 
+const fallbackServices = [
+  {
+    id: 1,
+    service_name: "Home Office Cleaning",
+    description: "Dusting, sanitizing, and organizing your workspace for a productive, fresh environment.",
+    price: 1200,
+    duration_hours: 2,
+    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
+    status: "Popular"
+  },
+  {
+    id: 2,
+    service_name: "Deep Cleaning",
+    description: "A thorough, detailed cleaning for kitchens, bathrooms, floors, and hard-to-reach corners.",
+    price: 1800,
+    duration_hours: 3,
+    image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=900&q=80",
+    status: "Top Rated"
+  },
+  {
+    id: 3,
+    service_name: "Home Cleaning",
+    description: "Reliable everyday home care for living rooms, bedrooms, and common spaces.",
+    price: 1500,
+    duration_hours: 2,
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80",
+    status: "Best Value"
+  },
+  {
+    id: 4,
+    service_name: "Office Cleaning",
+    description: "Professional cleaning for desks, meeting areas, and shared office spaces.",
+    price: 2000,
+    duration_hours: 3,
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=80",
+    status: "Business"
+  }
+];
+
 export default function Services() {
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState(fallbackServices);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -15,9 +54,10 @@ export default function Services() {
     try {
       const response = await api.get("/services");
       const data = Array.isArray(response.data) ? response.data : response.data?.data || [];
-      setServices(data);
+      setServices(data.length > 0 ? data : fallbackServices);
     } catch {
-      setError("We could not load services. Please make sure the backend is running.");
+      setServices(fallbackServices);
+      setError("");
     } finally {
       setLoading(false);
     }

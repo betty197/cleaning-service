@@ -5,17 +5,47 @@ import ServiceCard from "../components/ServiceCard";
 
 const heroImage = "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1500&q=85";
 
+const fallbackServices = [
+  {
+    id: 1,
+    service_name: "Home Office Cleaning",
+    description: "Dusting, sanitizing, and organizing your workspace for a productive, fresh environment.",
+    price: 1200,
+    duration_hours: 2,
+    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
+    status: "Popular"
+  },
+  {
+    id: 2,
+    service_name: "Deep Cleaning",
+    description: "A thorough, detailed cleaning for kitchens, bathrooms, floors, and hard-to-reach corners.",
+    price: 1800,
+    duration_hours: 3,
+    image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=900&q=80",
+    status: "Top Rated"
+  },
+  {
+    id: 3,
+    service_name: "Home Cleaning",
+    description: "Reliable everyday home care for living rooms, bedrooms, and common spaces.",
+    price: 1500,
+    duration_hours: 2,
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80",
+    status: "Best Value"
+  }
+];
+
 export default function Home() {
-  const [featuredServices, setFeaturedServices] = useState([]);
+  const [featuredServices, setFeaturedServices] = useState(fallbackServices);
 
   useEffect(() => {
     const loadFeatured = async () => {
       try {
         const response = await api.get("/services");
         const data = Array.isArray(response.data) ? response.data : response.data?.data || [];
-        setFeaturedServices(data.slice(0, 3));
+        setFeaturedServices(data.length > 0 ? data.slice(0, 3) : fallbackServices);
       } catch {
-        // Fallback gracefully
+        setFeaturedServices(fallbackServices);
       }
     };
     loadFeatured();
