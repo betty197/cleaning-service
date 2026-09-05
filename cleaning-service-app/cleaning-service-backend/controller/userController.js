@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const {
     getAllUsers,
     getUserById: getUserByIdModel,
@@ -48,11 +49,14 @@ const createUser = async (req, res) => {
             return res.status(409).json({ message: "An account with this email already exists." });
         }
 
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         const id = await createUserModel({
             full_name,
             email,
             phone: phone || "",
-            password,
+            password: hashedPassword,
             address: address || "",
             role: role || "customer"
         });
@@ -101,7 +105,13 @@ const loginUser = async (req, res) => {
         }
 
         // Password verification (supports plain text for seed/demo and direct comparison)
-        const isMatch = (user.password === password);
+        let isMatch = false;
+        if (user.password && user.password.startsWith('$2')) {
+            isMatch = await bcrypt.compare(password, user.password);
+        } else {
+            isMatch = (user.password === password);
+        }
+        
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid email or password." });
         }
