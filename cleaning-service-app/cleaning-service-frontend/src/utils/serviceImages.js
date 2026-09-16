@@ -6,70 +6,70 @@ export const SERVICE_IMAGE_PRESETS = [
     id: "residential",
     name: "Home & Residential Cleaning",
     keywords: ["home", "house", "residential", "room", "apartment", "living", "maid", "regular", "standard", "general"],
-    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=80",
     description: "Everyday residential and home living room cleaning"
   },
   {
     id: "home_office",
     name: "Home Office Cleaning",
     keywords: ["home office", "home-office", "office at home", "workspace", "desk", "study room", "remote work", "executive office"],
-    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=1000&q=80",
     description: "Professional cleaning for productive, organized home workspaces"
   },
   {
     id: "deep",
     name: "Deep Cleaning",
     keywords: ["deep", "intensive", "detailed", "spring", "scrub", "complete", "deep clean", "sanitization"],
-    image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=900&q=80",
-    description: "Intensive deep scrub and sanitization"
+    image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1000&q=80",
+    description: "Intensive deep scrub and sanitization for kitchens and living spaces"
   },
   {
     id: "office",
     name: "Office & Commercial Cleaning",
     keywords: ["office", "commercial", "corporate", "workplace", "business", "desk", "building"],
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1000&q=80",
     description: "Professional corporate office and workspace care"
   },
   {
     id: "carpet",
     name: "Carpet & Upholstery Cleaning",
     keywords: ["carpet", "rug", "upholstery", "sofa", "couch", "mattress", "fabric", "steam"],
-    image: "https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80",
     description: "Deep carpet shampooing, vacuuming and sofa care"
   },
   {
     id: "window",
     name: "Window & Glass Cleaning",
     keywords: ["window", "glass", "facade", "pane", "mirror"],
-    image: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1000&q=80",
     description: "Streak-free crystal clear window and glass washing"
   },
   {
     id: "move",
     name: "Move-In / Move-Out Cleaning",
     keywords: ["move", "moving", "tenancy", "relocation", "checkout", "end of tenancy", "tenant"],
-    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1000&q=80",
     description: "Spotless turnover cleaning for incoming and outgoing occupants"
   },
   {
     id: "post_construction",
     name: "Post-Construction Cleaning",
     keywords: ["construction", "renovation", "builder", "remodel", "dust", "after builder"],
-    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1000&q=80",
     description: "Thorough debris and dust removal after building or renovation"
   },
   {
     id: "kitchen",
     name: "Kitchen & Appliance Cleaning",
     keywords: ["kitchen", "oven", "refrigerator", "fridge", "stove", "grease", "appliance", "cook"],
-    image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1000&q=80",
     description: "Heavy degreasing and detailed kitchen appliance cleaning"
   },
   {
     id: "bathroom",
     name: "Bathroom & Sanitization",
     keywords: ["bathroom", "washroom", "toilet", "tile", "grout", "sanitiz", "disinfect"],
-    image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1000&q=80",
     description: "Hygienic bathroom scrubbing, tile descaling and disinfection"
   }
 ];

@@ -11,7 +11,7 @@ const fallbackServices = [
     description: "Dusting, sanitizing, and organizing your workspace for a productive, fresh environment.",
     price: 1200,
     duration_hours: 2,
-    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=1000&q=80",
     status: "Popular"
   },
   {
@@ -20,7 +20,7 @@ const fallbackServices = [
     description: "A thorough, detailed cleaning for kitchens, bathrooms, floors, and hard-to-reach corners.",
     price: 1800,
     duration_hours: 3,
-    image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1000&q=80",
     status: "Top Rated"
   },
   {
@@ -29,16 +29,16 @@ const fallbackServices = [
     description: "Reliable everyday home care for living rooms, bedrooms, and common spaces.",
     price: 1500,
     duration_hours: 2,
-    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=80",
     status: "Best Value"
   },
   {
     id: 4,
     service_name: "Office Cleaning",
-    description: "Professional cleaning for desks, meeting areas, and shared office spaces.",
+    description: "Professional cleaning for desks, meeting areas, and shared corporate office spaces.",
     price: 2000,
     duration_hours: 3,
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1000&q=80",
     status: "Business"
   }
 ];

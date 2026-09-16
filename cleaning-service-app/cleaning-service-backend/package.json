@@ -64,6 +64,7 @@
     "balanced-match": "^1.0.2",
     "baseline-browser-mapping": "^2.11.11",
     "batch": "^0.6.1",
+    "bcrypt": "^6.0.0",
     "bfj": "^7.1.0",
     "big.js": "^5.2.2",
     "binary-extensions": "^2.3.0",

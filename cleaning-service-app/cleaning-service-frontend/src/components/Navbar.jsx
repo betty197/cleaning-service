@@ -19,7 +19,7 @@ export default function Navbar() {
     <header className="site-header">
       <div className="container nav-wrap">
         <NavLink className="brand" to="/" onClick={close}>
-          <span className="brand-mark">C</span>
+          <span className="brand-mark">✨</span>
           <span>Clean<span>Pro</span></span>
         </NavLink>
 
