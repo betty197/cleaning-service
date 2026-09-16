@@ -19,6 +19,7 @@ import AdminUsers from "./pages/admin/Users";
 import AdminServices from "./pages/admin/Services";
 import AdminBookings from "./pages/admin/Bookings";
 import AdminPayments from "./pages/admin/Payments";
+import AdminContactMessages from "./pages/admin/ContactMessages";
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
             <Route path="/admin/services" element={<AdminServices />} />
             <Route path="/admin/bookings" element={<AdminBookings />} />
             <Route path="/admin/payments" element={<AdminPayments />} />
+            <Route path="/admin/contact-messages" element={<AdminContactMessages />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,24 +1,41 @@
 import { useState } from "react";
+import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import FormInput from "../components/FormInput";
 import SuccessMessage from "../components/SuccessMessage";
 import ErrorMessage from "../components/ErrorMessage";
 
 export default function Contact() {
+  const { user } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const update = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitted(false);
+    setError("");
     if (!form.name || !form.email || !form.message) {
       setError("Name, email, and message are required.");
       return;
     }
-    setError("");
-    setSubmitted(true);
-    setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+
+    setSubmitting(true);
+    try {
+      await api.post("/contact", {
+        ...form,
+        customer_id: user?.id || user?.user_id || null
+      });
+      setSubmitted(true);
+      setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || "Your message could not be sent.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -80,8 +97,8 @@ export default function Contact() {
                 <span>Message</span>
                 <textarea rows="4" name="message" value={form.message} onChange={update} placeholder="How can we help you?" required />
               </label>
-              <button className="btn btn-primary full-span" type="submit">
-                Send Message
+              <button className="btn btn-primary full-span" type="submit" disabled={submitting}>
+                {submitting ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>

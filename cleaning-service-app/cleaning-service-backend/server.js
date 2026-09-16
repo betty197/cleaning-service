@@ -28,6 +28,7 @@ const bookingRoutes = require("./routes/routBooking");
 const paymentRoutes = require("./routes/routPayment");
 const serviceRoutes = require("./routes/routService");
 const userRoutes = require("./routes/routUser");
+const contactRoutes = require("./routes/routContact");
 
 // Test route
 app.get("/", (req, res) => {
@@ -39,6 +40,7 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/contact", contactRoutes);
 
 // 404 Route handler
 app.use((req, res) => {
@@ -59,4 +61,4 @@ const PORT = process.env.PORT || 5000;
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-});
+});

@@ -5,18 +5,18 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import ErrorMessage from "../../components/ErrorMessage";
 
 export default function Dashboard() {
-  const [stats, setStats] = useState({ users: 0, services: 0, bookings: 0, payments: 0 });
+  const [stats, setStats] = useState({ users: 0, services: 0, bookings: 0, payments: 0, messages: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [users, services, bookings, payments] = await Promise.all([
-          api.get("/users"), api.get("/services"), api.get("/bookings"), api.get("/payments")
+        const [users, services, bookings, payments, messages] = await Promise.all([
+          api.get("/users"), api.get("/services"), api.get("/bookings"), api.get("/payments"), api.get("/contact")
         ]);
         const list = (response) => Array.isArray(response.data) ? response.data : response.data?.data || [];
-        setStats({ users: list(users).length, services: list(services).length, bookings: list(bookings).length, payments: list(payments).length });
+        setStats({ users: list(users).length, services: list(services).length, bookings: list(bookings).length, payments: list(payments).length, messages: list(messages).length });
       } catch {
         setError("Could not load dashboard statistics.");
       } finally {
@@ -30,7 +30,8 @@ export default function Dashboard() {
     ["Total Users", stats.users, "/admin/users"],
     ["Total Services", stats.services, "/admin/services"],
     ["Total Bookings", stats.bookings, "/admin/bookings"],
-    ["Total Payments", stats.payments, "/admin/payments"]
+    ["Total Payments", stats.payments, "/admin/payments"],
+    ["Contact Messages", stats.messages, "/admin/contact-messages"]
   ];
 
   return (
@@ -47,6 +48,7 @@ export default function Dashboard() {
           <Link to="/admin/services">Manage Services</Link>
           <Link to="/admin/bookings">Manage Bookings</Link>
           <Link to="/admin/payments">View Payments</Link>
+          <Link to="/admin/contact-messages">View Contact Messages</Link>
         </div>
       </div>
     </section>
