@@ -14,6 +14,9 @@ const createContactMessage = async (req, res) => {
         if (!name || !email || !message) {
             return res.status(400).json({ message: "Name, email, and message are required." });
         }
+        if (phone && (typeof phone !== "string" || !/^\d{10}$/.test(phone))) {
+            return res.status(400).json({ message: "Phone number must contain exactly 10 digits." });
+        }
 
         const id = await createContactMessageModel({
             customer_id: req.user?.id || req.user?.user_id || null,

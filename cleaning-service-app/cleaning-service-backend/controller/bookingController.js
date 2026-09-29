@@ -45,6 +45,15 @@ const createBooking = async (req, res) => {
             return res.status(400).json({ message: "Service, date, time, and address are required to book." });
         }
 
+        const dateParts = booking_date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        const parsedDate = dateParts ? new Date(`${booking_date}T00:00:00.000Z`) : null;
+        const isValidDate = parsedDate && !Number.isNaN(parsedDate.getTime()) && parsedDate.toISOString().slice(0, 10) === booking_date;
+        const now = new Date();
+        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+        if (!isValidDate || booking_date < today) {
+            return res.status(400).json({ message: "Booking date must be today or a future date." });
+        }
+
         const id = await createBookingModel(req.body);
         const created = await getBookingByIdModel(id);
         res.status(201).json({ id, message: "Booking created successfully", booking: created, data: created });

@@ -163,7 +163,7 @@ export default function Users() {
             </label>
             <label className="form-field">
               <span>Phone</span>
-              <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+              <input type="tel" inputMode="numeric" maxLength={10} pattern="[0-9]{10}" title="Enter exactly 10 digits" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })} />
             </label>
             <label className="form-field">
               <span>New password (optional)</span>

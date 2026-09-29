@@ -24,10 +24,10 @@ export const SERVICE_IMAGE_PRESETS = [
     description: "Intensive deep scrub and sanitization for kitchens and living spaces"
   },
   {
-    id: "office",
-    name: "Office & Commercial Cleaning",
+    id: "kitchen",
+    name:  "Kitchen & Appliance Cleaning",
     keywords: ["office", "commercial", "corporate", "workplace", "business", "desk", "building"],
-    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1000&q=80",
+    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
     description: "Professional corporate office and workspace care"
   },
   {
@@ -40,7 +40,7 @@ export const SERVICE_IMAGE_PRESETS = [
   {
     id: "window",
     name: "Window & Glass Cleaning",
-    keywords: ["window", "glass", "facade", "pane", "mirror"],
+    keywords: ["kitchen", "oven", "refrigerator", "fridge", "stove", "grease", "appliance", "cook"],
     image: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1000&q=80",
     description: "Streak-free crystal clear window and glass washing"
   },
@@ -62,7 +62,7 @@ export const SERVICE_IMAGE_PRESETS = [
     id: "kitchen",
     name: "Kitchen & Appliance Cleaning",
     keywords: ["kitchen", "oven", "refrigerator", "fridge", "stove", "grease", "appliance", "cook"],
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1000&q=80",
+    image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
     description: "Heavy degreasing and detailed kitchen appliance cleaning"
   },
   {
@@ -80,11 +80,22 @@ export const SERVICE_IMAGE_PRESETS = [
  * Otherwise, it analyzes the service name and description to match the most appropriate image.
  */
 export function getServiceImage(service) {
+  const rawName = (service?.service_name || service?.name || "").toLowerCase().trim();
+  const officePreset = SERVICE_IMAGE_PRESETS.find((preset) => preset.id === "office");
+  const kitchenPreset = SERVICE_IMAGE_PRESETS.find((preset) => preset.id === "kitchen");
+
+  if (rawName.includes("office cleaning") && officePreset) {
+    return officePreset.image;
+  }
+
+  if ((rawName.includes("kitchen cleaning") || rawName.includes("kitchen & appliance cleaning")) && kitchenPreset) {
+    return kitchenPreset.image;
+  }
+
   if (service && typeof service.image === "string" && service.image.trim().length > 5) {
     return service.image.trim();
   }
 
-  const rawName = (service?.service_name || service?.name || "").toLowerCase();
   const desc = (service?.description || "").toLowerCase();
   const text = `${rawName} ${desc}`.replace(/[^a-z0-9\s]/g, " ");
 

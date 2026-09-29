@@ -29,6 +29,7 @@ const fallbackServices = [
     description: "Reliable everyday home care for living rooms, bedrooms, and common spaces.",
     price: 1500,
     duration_hours: 2,
+    
     image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=80",
     status: "Best Value"
   },
@@ -38,7 +39,7 @@ const fallbackServices = [
     description: "Professional cleaning for desks, meeting areas, and shared corporate office spaces.",
     price: 2000,
     duration_hours: 3,
-    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1000&q=80",
+    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
     status: "Business"
   }
 ];

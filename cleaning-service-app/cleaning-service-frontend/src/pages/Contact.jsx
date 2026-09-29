@@ -91,7 +91,7 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="form-grid">
               <FormInput label="Full Name" name="name" value={form.name} onChange={update} placeholder="Your name" required />
               <FormInput label="Email" name="email" type="email" value={form.email} onChange={update} placeholder="you@example.com" required />
-              <FormInput label="Phone Number" name="phone" value={form.phone} onChange={update} placeholder="+251..." />
+              <FormInput label="Phone Number" name="phone" type="tel" inputMode="numeric" maxLength={10} pattern="[0-9]{10}" title="Enter exactly 10 digits" value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value.replace(/\D/g, "").slice(0, 10) })} placeholder="10-digit phone number" />
               <FormInput label="Subject" name="subject" value={form.subject} onChange={update} placeholder="Booking inquiry, quote, etc." />
               <label className="form-field full-span">
                 <span>Message</span>
