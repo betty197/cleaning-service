@@ -62,7 +62,7 @@ export const SERVICE_IMAGE_PRESETS = [
     id: "kitchen",
     name: "Kitchen & Appliance Cleaning",
     keywords: ["kitchen", "oven", "refrigerator", "fridge", "stove", "grease", "appliance", "cook"],
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1000&q=80",
+    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1000&q=80",
     description: "Heavy degreasing and detailed kitchen appliance cleaning"
   },
   {
