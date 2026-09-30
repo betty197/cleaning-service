@@ -19,7 +19,7 @@ export default function Navbar() {
     <header className="site-header">
       <div className="container nav-wrap">
         <NavLink className="brand" to="/" onClick={close}>
-          <span className="brand-mark">✨</span>
+          <img src="/logo.png" alt="CleanPro Official Logo" className="brand-official-logo" />
           <span>Clean<span>Pro</span></span>
         </NavLink>
 
@@ -45,10 +45,12 @@ export default function Navbar() {
           {isAuthenticated && <NavLink to="/profile" onClick={close}>Profile</NavLink>}
           {!isAuthenticated && <NavLink to="/login" onClick={close}>Login</NavLink>}
           {!isAuthenticated && <NavLink className="nav-register" to="/register" onClick={close}>Register</NavLink>}
-          {isAuthenticated && user?.role === "admin" && <NavLink to="/admin" onClick={close}>Admin</NavLink>}
+          {isAuthenticated && user?.role === "admin" && <NavLink to="/admin" onClick={close}>Control Center</NavLink>}
+          
+          {/* Persistent Accessible Top-Right Sign Out Button */}
           {isAuthenticated && (
-            <button className="nav-logout" type="button" onClick={handleLogout}>
-              Logout
+            <button className="nav-logout persistent-topright-btn" type="button" onClick={handleLogout} title="Sign Out">
+              Sign Out
             </button>
           )}
         </nav>
