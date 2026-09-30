@@ -318,10 +318,14 @@ export default function Users() {
           <div className="form-group">
             <label htmlFor="phone">Phone Number</label>
             <input
-              type="text"
+              type="tel"
+              inputMode="numeric"
+              maxLength={10}
+              pattern="[0-9]{10}"
+              title="Enter exactly 10 digits"
               id="phone"
               value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })}
             />
           </div>
 
@@ -352,30 +356,6 @@ export default function Users() {
             <label htmlFor="password">
               {editing ? "New Password (leave blank to keep current)" : "Password *"}
             </label>
-<<<<<<< Updated upstream
-            <label className="form-field">
-              <span>Email</span>
-              <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            </label>
-            <label className="form-field">
-              <span>Phone</span>
-              <input type="tel" inputMode="numeric" maxLength={10} pattern="[0-9]{10}" title="Enter exactly 10 digits" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })} />
-            </label>
-            <label className="form-field">
-              <span>New password (optional)</span>
-              <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
-            </label>
-            <label className="form-field">
-              <span>Role</span>
-              <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
-            </label>
-            <label className="form-field full-span">
-              <span>Address</span>
-              <textarea rows="4" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
-            </label>
-            <button className="btn btn-primary full-span" disabled={saving}>
-              {saving ? "Saving..." : "Save Changes"}
-=======
             <input
               type="password"
               id="password"
@@ -392,7 +372,6 @@ export default function Users() {
               onClick={() => setEditOpen(false)}
             >
               Cancel
->>>>>>> Stashed changes
             </button>
             <button type="submit" className="btn btn-primary" disabled={saving}>
               {saving ? "Saving..." : "Save User"}
