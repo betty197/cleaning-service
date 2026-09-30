@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getServiceImage } from "../utils/serviceImages";
 
 export default function ServiceCard({ service }) {
   const defaultImage = getServiceImage(service);
   const [imgSrc, setImgSrc] = useState(defaultImage);
+
+  useEffect(() => {
+    setImgSrc(defaultImage);
+  }, [defaultImage]);
 
   return (
     <article className="service-card">
