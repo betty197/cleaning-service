@@ -54,7 +54,7 @@ export default function Register() {
         <form onSubmit={submit} className="form-grid">
           <FormInput label="Full name" name="full_name" value={form.full_name} onChange={update} placeholder="Your full name" required />
           <FormInput label="Email" name="email" type="email" value={form.email} onChange={update} placeholder="you@example.com" required />
-          <FormInput label="Phone" name="phone" value={form.phone} onChange={update} placeholder="+251..." />
+          <FormInput label="Phone" name="phone" type="tel" inputMode="numeric" maxLength={10} pattern="[0-9]{10}" title="Enter exactly 10 digits" value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value.replace(/\D/g, "").slice(0, 10) })} placeholder="10-digit phone number" />
           <FormInput label="Password" name="password" type="password" value={form.password} onChange={update} placeholder="Create a password" required minLength={6} />
           <label className="form-field full-span"><span>Address</span><textarea name="address" value={form.address} onChange={update} rows="4" placeholder="Your address" /></label>
           <ErrorMessage message={error} />

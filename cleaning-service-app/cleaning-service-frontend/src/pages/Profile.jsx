@@ -117,9 +117,14 @@ export default function Profile() {
             <FormInput
               label="Phone Number"
               name="phone"
+              type="tel"
+              inputMode="numeric"
+              maxLength={10}
+              pattern="[0-9]{10}"
+              title="Enter exactly 10 digits"
               value={editForm.phone}
-              onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-              placeholder="+251..."
+              onChange={(e) => setEditForm({ ...editForm, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })}
+              placeholder="10-digit phone number"
             />
             <label className="form-field full-span">
               <span>Default Address</span>

@@ -10,6 +10,8 @@ import { getServiceImage } from "../utils/serviceImages";
 export default function Booking() {
   const { user, isAuthenticated } = useAuth();
   const [searchParams] = useSearchParams();
+  const currentDate = new Date();
+  const minimumBookingDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
   const [services, setServices] = useState([]);
   const [form, setForm] = useState({
     service_id: searchParams.get("service") || "",
@@ -55,6 +57,10 @@ export default function Booking() {
     const userId = user?.id || user?.user_id;
     if (!userId) {
       setError("Please log in before creating a booking.");
+      return;
+    }
+    if (form.booking_date < minimumBookingDate) {
+      setError("Please choose today or a future date.");
       return;
     }
 
@@ -135,6 +141,7 @@ export default function Booking() {
               <span>Booking date</span>
               <input
                 type="date"
+                min={minimumBookingDate}
                 value={form.booking_date}
                 onChange={(e) => setForm({ ...form, booking_date: e.target.value })}
                 required

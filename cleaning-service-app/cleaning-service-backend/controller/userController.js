@@ -42,6 +42,9 @@ const createUser = async (req, res) => {
         if (!full_name || !email || !password) {
             return res.status(400).json({ message: "Full name, email, and password are required." });
         }
+        if (phone && (typeof phone !== "string" || !/^\d{10}$/.test(phone))) {
+            return res.status(400).json({ message: "Phone number must contain exactly 10 digits." });
+        }
 
         // Check if user already exists
         const existing = await getUserByEmailModel(email);
@@ -161,6 +164,10 @@ const getCurrentUser = async (req, res) => {
 // Update user
 const updateUser = async (req, res) => {
     try {
+        const { phone } = req.body;
+        if (phone && (typeof phone !== "string" || !/^\d{10}$/.test(phone))) {
+            return res.status(400).json({ message: "Phone number must contain exactly 10 digits." });
+        }
         await updateUserModel(req.params.id, req.body);
         const updated = await getUserByIdModel(req.params.id);
         res.json({ message: "User updated successfully", user: updated, data: updated });
