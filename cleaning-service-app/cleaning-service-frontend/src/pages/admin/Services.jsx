@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useOutletContext } from "react-router-dom";
 import api from "../../services/api";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -8,6 +9,7 @@ import { SERVICE_IMAGE_PRESETS, getServiceImage } from "../../utils/serviceImage
 const emptyForm = { service_name: "", description: "", price: "", duration_hours: "", image: "", status: "Active" };
 
 export default function Services() {
+  const { searchQuery } = useOutletContext() || {};
   const [services, setServices] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [editing, setEditing] = useState(null);
@@ -15,6 +17,11 @@ export default function Services() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [validationError, setValidationError] = useState("");
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
 
   const load = async () => {
     setLoading(true);
@@ -33,14 +40,50 @@ export default function Services() {
     load();
   }, []);
 
+  // Filtered services via global search
+  const filteredServices = useMemo(() => {
+    if (!searchQuery || !searchQuery.trim()) return services;
+    const q = searchQuery.toLowerCase().trim();
+    return services.filter(
+      (s) =>
+        (s.service_name || "").toLowerCase().includes(q) ||
+        (s.description || "").toLowerCase().includes(q) ||
+        (s.status || "").toLowerCase().includes(q)
+    );
+  }, [services, searchQuery]);
+
+  // Pagination
+  const totalRecords = filteredServices.length;
+  const totalPages = Math.ceil(totalRecords / pageSize) || 1;
+  const paginatedServices = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredServices.slice(start, start + pageSize);
+  }, [filteredServices, currentPage, pageSize]);
+
+  // Validations
+  const validateForm = () => {
+    setValidationError("");
+    if (!form.service_name || form.service_name.trim().length < 2) {
+      setValidationError("Service Name is required (at least 2 characters).");
+      return false;
+    }
+    if (!form.price || isNaN(form.price) || Number(form.price) <= 0) {
+      setValidationError("Price must be a valid positive number.");
+      return false;
+    }
+    return true;
+  };
+
   const openCreate = () => {
     setEditing(null);
     setForm(emptyForm);
+    setValidationError("");
     setOpen(true);
   };
 
   const openEdit = (item) => {
     setEditing(item);
+    setValidationError("");
     setForm({
       service_name: item.service_name || "",
       description: item.description || "",
@@ -61,194 +104,250 @@ export default function Services() {
     }));
   };
 
-  const save = async (event) => {
+  const saveService = async (event) => {
     event.preventDefault();
+    if (!validateForm()) return;
+
     setSaving(true);
     setError("");
-    try {
-      const payload = {
-        service_name: form.service_name,
-        description: form.description,
-        price: form.price === "" ? 0 : Number(form.price),
-        duration: `${form.duration_hours || 2} hours`,
-        duration_hours: form.duration_hours === "" ? 2 : Number(form.duration_hours),
-        image: form.image || getServiceImage(form),
-        status: form.status || "Active"
-      };
 
-      const serviceId = editing?.id || editing?.service_id;
-      if (editing && serviceId) {
-        const response = await api.put(`/services/${serviceId}`, payload);
-        const updated = response.data?.service || response.data?.data || { ...editing, ...payload };
-        setServices((items) =>
-          items.map((item) => ((item.id || item.service_id) === serviceId ? { ...item, ...updated } : item))
-        );
+    const payload = {
+      service_name: form.service_name.trim(),
+      description: form.description.trim(),
+      price: Number(form.price),
+      duration_hours: form.duration_hours ? Number(form.duration_hours) : 0,
+      image: form.image.trim(),
+      status: form.status
+    };
+
+    try {
+      let saved;
+      if (editing?.id) {
+        const response = await api.put(`/services/${editing.id}`, payload);
+        saved = response.data?.service || response.data?.data || { ...editing, ...payload };
+        setServices((items) => items.map((item) => (item.id === editing.id ? saved : item)));
       } else {
         const response = await api.post("/services", payload);
-        const created = response.data?.service || response.data?.data || response.data;
-        setServices((items) => [...items, created]);
+        saved = response.data?.service || response.data?.data || { id: Date.now(), ...payload };
+        setServices((items) => [...items, saved]);
       }
       setOpen(false);
-    } catch (requestError) {
-      setError(requestError.response?.data?.message || "Service could not be saved.");
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not save service.");
     } finally {
       setSaving(false);
     }
   };
 
-  const remove = async (item) => {
-    const serviceId = item.id || item.service_id;
-    if (!window.confirm(`Delete service "${item.service_name}"?`)) return;
+  const removeService = async (id) => {
+    if (!window.confirm("Delete this service catalog item?")) return;
     try {
-      await api.delete(`/services/${serviceId}`);
-      setServices((items) => items.filter((s) => (s.id || s.service_id) !== serviceId));
+      await api.delete(`/services/${id}`);
+      setServices((items) => items.filter((item) => item.id !== id));
     } catch {
       setError("Service could not be deleted.");
     }
   };
-
-  const previewImg = form.image || getServiceImage(form);
 
   return (
     <section className="page-section">
       <div className="container">
         <div className="admin-heading">
           <div>
-            <span className="eyebrow">Administration</span>
-            <h1>Services</h1>
-            <p>Create and maintain the cleaning services in your database.</p>
+            <span className="eyebrow">CATALOG MANAGEMENT</span>
+            <h1>Manage Services</h1>
+            <p>Create, update, and manage cleaning service catalog offerings, images, and pricing.</p>
           </div>
-          <button className="btn btn-primary" onClick={openCreate}>
-            + Add Service
+          <button type="button" className="btn btn-primary" onClick={openCreate}>
+            ➕ Add Service
           </button>
         </div>
 
-        <ErrorMessage message={error} onRetry={load} />
-        {loading && <LoadingSpinner text="Loading services..." />}
+        {loading && <LoadingSpinner text="Loading service catalog..." />}
+        <ErrorMessage message={error} />
 
         {!loading && (
-          <div className="admin-service-grid">
-            {services.map((item) => {
-              const serviceId = item.id || item.service_id;
-              const cardImg = getServiceImage(item);
-              return (
-                <div className="admin-service-card" key={serviceId}>
-                  <div className="admin-service-thumb">
-                    <img src={cardImg} alt={item.service_name} loading="lazy" />
-                  </div>
-                  <div>
-                    <span className="eyebrow">#{serviceId}</span>
-                    <h3>{item.service_name}</h3>
-                    <p>{item.description || "No description provided."}</p>
-                  </div>
-                  <div className="service-meta">
-                    <strong>{item.price ?? "—"} ETB</strong>
-                    <span>{item.duration_hours || item.duration || "—"} hrs</span>
-                  </div>
-                  <div className="table-actions">
-                    <button onClick={() => openEdit(item)}>Edit</button>
-                    <button className="danger-text" onClick={() => remove(item)}>Delete</button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+          <>
+            <div className="admin-service-grid">
+              {paginatedServices.length === 0 ? (
+                <div className="empty-catalog text-center py-4">No services found matching search.</div>
+              ) : (
+                paginatedServices.map((item) => (
+                  <div className="admin-service-card" key={item.id}>
+                    <div className="service-card-image-wrap">
+                      <img
+                        src={getServiceImage(item)}
+                        alt={item.service_name}
+                        className="service-card-img"
+                        onError={(e) => {
+                          e.target.src = "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80";
+                        }}
+                      />
+                      <span className={`status-pill ${item.status === "Active" ? "pill-emerald" : "pill-gray"}`}>
+                        {item.status || "Active"}
+                      </span>
+                    </div>
 
-        <Modal open={open} title={editing ? "Edit Service" : "Add Service"} onClose={() => setOpen(false)}>
-          <form className="form-grid" onSubmit={save}>
-            <div className="full-span">
-              <span style={{ fontSize: "0.84rem", fontWeight: 700, color: "#34445b", display: "block", marginBottom: "0.5rem" }}>
-                Quick Image & Category Presets
-              </span>
-              <div className="preset-chip-list">
-                {SERVICE_IMAGE_PRESETS.map((preset) => (
-                  <button
-                    key={preset.id}
-                    type="button"
-                    className="preset-chip"
-                    onClick={() => applyPreset(preset)}
-                    title={preset.description}
-                  >
-                    <img src={preset.image} alt={preset.name} />
-                    <span>{preset.name}</span>
-                  </button>
-                ))}
-              </div>
+                    <div className="service-card-body">
+                      <h3>{item.service_name}</h3>
+                      <p>{item.description}</p>
+                      <div className="admin-service-meta">
+                        <strong>${Number(item.price || 0).toFixed(2)}</strong>
+                        <span>⏱️ {item.duration_hours || item.duration || 2} hrs</span>
+                      </div>
+                      <div className="table-actions margin-top-12">
+                        <button type="button" className="btn-action edit" onClick={() => openEdit(item)}>
+                          Edit
+                        </button>
+                        <button type="button" className="btn-action delete" onClick={() => removeService(item.id)}>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
 
-            <label className="form-field full-span">
-              <span>Service name</span>
-              <input
-                required
-                value={form.service_name}
-                onChange={(e) => setForm({ ...form, service_name: e.target.value })}
-                placeholder="e.g. Deep Cleaning Service"
-              />
-            </label>
-            <label className="form-field full-span">
-              <span>Description</span>
-              <textarea
-                rows="3"
-                value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                placeholder="Describe what is included in this cleaning service"
-              />
-            </label>
-            <label className="form-field">
-              <span>Price (ETB)</span>
+            {/* Pagination Controls */}
+            <div className="pagination-bar margin-top-24">
+              <div className="pagination-info">
+                Showing {totalRecords === 0 ? 0 : (currentPage - 1) * pageSize + 1} to{" "}
+                {Math.min(currentPage * pageSize, totalRecords)} of {totalRecords} services
+              </div>
+              <div className="pagination-controls">
+                <label>
+                  Page Size:
+                  <select
+                    value={pageSize}
+                    onChange={(e) => {
+                      setPageSize(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <option value={6}>6</option>
+                    <option value={12}>12</option>
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  className="btn-page"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                >
+                  ◀ Prev
+                </button>
+                <span className="page-indicator">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  type="button"
+                  className="btn-page"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                >
+                  Next ▶
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Modal: Service Editor */}
+      <Modal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title={editing ? `Edit Service #${editing.id}` : "Create New Cleaning Service"}
+      >
+        <form onSubmit={saveService} className="modal-form">
+          {validationError && (
+            <div className="validation-error-box">
+              ⚠️ {validationError}
+            </div>
+          )}
+
+          <div className="form-group">
+            <label htmlFor="service_name">Service Name *</label>
+            <input
+              type="text"
+              id="service_name"
+              value={form.service_name}
+              onChange={(e) => setForm({ ...form, service_name: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="description">Description</label>
+            <textarea
+              id="description"
+              rows="3"
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+            />
+          </div>
+
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label htmlFor="price">Price ($) *</label>
               <input
                 type="number"
-                min="0"
                 step="0.01"
+                min="1"
+                id="price"
                 value={form.price}
                 onChange={(e) => setForm({ ...form, price: e.target.value })}
                 required
               />
-            </label>
-            <label className="form-field">
-              <span>Duration (hours)</span>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="duration_hours">Duration (Hours)</label>
               <input
                 type="number"
-                min="0.5"
                 step="0.5"
+                min="0.5"
+                id="duration_hours"
                 value={form.duration_hours}
                 onChange={(e) => setForm({ ...form, duration_hours: e.target.value })}
-                placeholder="e.g. 3"
               />
-            </label>
-            <label className="form-field full-span">
-              <span>Image URL (or select preset above)</span>
-              <input
-                value={form.image}
-                onChange={(e) => setForm({ ...form, image: e.target.value })}
-                placeholder="https://images.unsplash.com/..."
-              />
-            </label>
+            </div>
+          </div>
 
-            {previewImg && (
-              <div className="full-span form-image-preview">
-                <span>Selected Image Preview:</span>
-                <img src={previewImg} alt="Preview" />
-              </div>
-            )}
+          <div className="form-group">
+            <label htmlFor="status">Status</label>
+            <select
+              id="status"
+              value={form.status}
+              onChange={(e) => setForm({ ...form, status: e.target.value })}
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
 
-            <label className="form-field full-span">
-              <span>Status</span>
-              <select
-                value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value })}
-              >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-            </label>
-            <button className="btn btn-primary full-span" disabled={saving}>
-              {saving ? "Saving Service..." : "Save Service"}
+          <div className="form-group">
+            <label htmlFor="image">Image URL</label>
+            <input
+              type="text"
+              id="image"
+              value={form.image}
+              onChange={(e) => setForm({ ...form, image: e.target.value })}
+              placeholder="https://..."
+            />
+          </div>
+
+          <div className="modal-actions">
+            <button type="button" className="btn btn-secondary" onClick={() => setOpen(false)}>
+              Cancel
             </button>
-          </form>
-        </Modal>
-      </div>
+            <button type="submit" className="btn btn-primary" disabled={saving}>
+              {saving ? "Saving..." : "Save Service"}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </section>
   );
 }

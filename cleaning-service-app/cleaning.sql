@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS `bookings`;
 CREATE TABLE `bookings` (
   `id` int NOT NULL AUTO_INCREMENT,
   `customer_id` int NOT NULL,
-  `service_id` int NOT NULL,
+  `service_id` int NOT NULL,npm
   `booking_date` date NOT NULL,
   `booking_time` time NOT NULL,
   `address` varchar(255) NOT NULL,
