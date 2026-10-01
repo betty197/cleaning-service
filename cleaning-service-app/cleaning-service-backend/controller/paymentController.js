@@ -32,12 +32,23 @@ const getPaymentById = async (req, res) => {
 // Create payment
 const createPayment = async (req, res) => {
     try {
-        const { booking_id, amount } = req.body;
+        const { booking_id, amount, payment_method, payment_account } = req.body;
         if (!booking_id || amount === undefined) {
             return res.status(400).json({ message: "Booking ID and amount are required." });
         }
 
-        const id = await createPaymentModel(req.body);
+        const normalizedMethod = String(payment_method || "Cash").trim();
+        const requiresAccount = ["Telebirr", "CBE Birr", "Bank Transfer"].includes(normalizedMethod);
+        if (requiresAccount && !payment_account) {
+            return res.status(400).json({ message: "Please provide the selected account for this payment method." });
+        }
+
+        const id = await createPaymentModel({
+            ...req.body,
+            payment_method: normalizedMethod,
+            account_type: req.body.account_type || normalizedMethod,
+            payment_account: payment_account || null
+        });
         const created = await getPaymentByIdModel(id);
         res.status(201).json({ id, message: "Payment created successfully", payment: created, data: created });
     } catch (error) {
@@ -72,4 +83,4 @@ module.exports = {
     createPayment,
     updatePayment,
     deletePayment,
-};
+};

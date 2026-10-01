@@ -96,7 +96,7 @@ export default function Login() {
             disabled={loading}
             type="submit"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 

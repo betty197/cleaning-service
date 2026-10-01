@@ -47,10 +47,10 @@ export default function Navbar() {
           {!isAuthenticated && <NavLink className="nav-register" to="/register" onClick={close}>Register</NavLink>}
           {isAuthenticated && user?.role === "admin" && <NavLink to="/admin" onClick={close}>Control Center</NavLink>}
           
-          {/* Persistent Accessible Top-Right Sign Out Button */}
+          {/* Persistent Accessible Top-Right Logout Button */}
           {isAuthenticated && (
-            <button className="nav-logout persistent-topright-btn" type="button" onClick={handleLogout} title="Sign Out">
-              Sign Out
+            <button className="nav-logout persistent-topright-btn" type="button" onClick={handleLogout} title="Logout">
+              Logout
             </button>
           )}
         </nav>

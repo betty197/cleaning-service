@@ -64,7 +64,7 @@ export default function Register() {
           </button>
         </form>
         {loading && <LoadingSpinner text="Registering your account..." />}
-        <p className="auth-footer">Already registered? <Link to="/login">Sign in here</Link></p>
+        <p className="auth-footer">Already registered? <Link to="/login">Login here</Link></p>
       </div>
     </section>
   );

@@ -425,8 +425,11 @@ body {
 
 .hero-image {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 130%;
+  max-width: none;
   height: 100%;
   object-fit: cover;
   object-position: center;
@@ -1509,6 +1512,29 @@ body {
   word-break: break-word;
 }
 
+.booking-card-actions,
+.booking-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gray-100);
+}
+
+.booking-card-actions .btn,
+.booking-card-actions .btn-danger,
+.booking-edit-actions .btn {
+  padding: 10px 16px;
+  font-size: 0.88rem;
+}
+
+.booking-card-actions .btn-danger:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
 .status-badge {
   display: inline-flex;
   border-radius: var(--radius-full);
@@ -1881,12 +1907,16 @@ td {
 
 .footer-payment-methods {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 8px;
   margin-top: 12px;
 }
 
 .payment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
@@ -1894,6 +1924,17 @@ td {
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--white);
+}
+
+.payment-badge svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .footer-bottom {
@@ -1987,6 +2028,9 @@ td {
   }
   .hero {
     min-height: 640px;
+  }
+  .hero-image {
+    object-position: 100% center;
   }
   .hero-content {
     padding: 60px 0;

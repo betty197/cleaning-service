@@ -5,7 +5,10 @@ const {
     createBooking,
     updateBooking,
     deleteBooking,
+    updateCustomerBooking,
+    cancelCustomerBooking,
 } = require("../controller/bookingController");
+const { auth } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -20,6 +23,8 @@ router.get("/:id", getBookingById);
 
 // Update a booking
 router.put("/:id", updateBooking);
+router.put("/:id/details", auth, updateCustomerBooking);
+router.patch("/:id/cancel", auth, cancelCustomerBooking);
 
 // Delete a booking
 router.delete("/:id", deleteBooking);

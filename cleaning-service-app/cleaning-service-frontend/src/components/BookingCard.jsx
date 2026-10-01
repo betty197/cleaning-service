@@ -1,7 +1,7 @@
 import StatusBadge from "./StatusBadge";
 import { getServiceImage } from "../utils/serviceImages";
 
-export default function BookingCard({ booking, service, serviceName, onPay }) {
+export default function BookingCard({ booking, service, serviceName, onPay, onEdit, onCancel, saving = false }) {
   const bookingId = booking.id || booking.booking_id;
   const isPaid = booking.payment_status === "Completed";
   const price = booking.service_price || booking.payment_amount;
@@ -54,6 +54,20 @@ export default function BookingCard({ booking, service, serviceName, onPay }) {
           >
             💳 Pay Now ({price ? `${price} ETB` : "Select Method"})
           </button>
+        </div>
+      )}
+      {["Pending", "Confirmed"].includes(booking.status) && (onEdit || onCancel) && (
+        <div className="booking-card-actions">
+          {onEdit && (
+            <button type="button" className="btn btn-secondary" onClick={() => onEdit(booking)} disabled={saving}>
+              Edit Booking
+            </button>
+          )}
+          {onCancel && (
+            <button type="button" className="btn-danger" onClick={() => onCancel(booking)} disabled={saving}>
+              {saving ? "Updating..." : "Cancel Booking"}
+            </button>
+          )}
         </div>
       )}
     </article>

@@ -316,11 +316,11 @@ export default function AdminLayout() {
       <Modal
         open={logoutModalOpen}
         onClose={() => setLogoutModalOpen(false)}
-        title="Confirm Sign Out"
+        title="Confirm Logout"
       >
         <div className="logout-modal-content">
           <p className="logout-modal-text">
-            Are you sure you want to end your current session and sign out of the CleanPro Control Center?
+            Are you sure you want to end your current session and log out of the CleanPro Control Center?
           </p>
           <div className="logout-modal-actions">
             <button
@@ -335,7 +335,7 @@ export default function AdminLayout() {
               className="btn btn-danger"
               onClick={handleConfirmLogout}
             >
-              Sign Out
+              Logout
             </button>
           </div>
         </div>

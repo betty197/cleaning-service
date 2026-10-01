@@ -145,6 +145,15 @@ const updateBooking = async (id, statusOrData) => {
     );
 };
 
+const updateBookingDetails = async (id, data) => {
+    await pool.query(
+        `UPDATE bookings
+        SET service_id=?, booking_date=?, booking_time=?, address=?
+        WHERE id=?`,
+        [data.service_id, data.booking_date, data.booking_time, data.address, id]
+    );
+};
+
 // Delete booking
 const deleteBooking = async (id) => {
     await pool.query(
@@ -159,5 +168,6 @@ module.exports = {
     getBookingsByUserId,
     createBooking,
     updateBooking,
+    updateBookingDetails,
     deleteBooking
 };

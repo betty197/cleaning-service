@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../services/api";
 import ServiceCard from "../components/ServiceCard";
 
-const heroImage = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=85";
+const heroImage = "https://images.unsplash.com/photo-1781637590564-01c65dbf2039?auto=format&fit=crop&w=2000&q=85";
 
 const fallbackServices = [
   {
@@ -60,7 +60,7 @@ export default function Home() {
         <img
           className="hero-image"
           src={heroImage}
-          alt="Sunlit, spotless modern interior living space cleaned by CleanPro"
+          alt="Cleaner wearing workwear and gloves while vacuuming a carpeted office"
         />
         <div className="container hero-content">
           <div className="hero-badge">
@@ -86,31 +86,6 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="hero-stats">
-            <div className="hero-stat-card">
-              <strong>10K+</strong>
-              <span>Cleaned Spaces</span>
-            </div>
-            <div className="hero-stat-card">
-              <strong>4.9 ★</strong>
-              <span>Customer Rating</span>
-            </div>
-            <div className="hero-stat-card">
-              <strong>100%</strong>
-              <span>Satisfaction Guarantee</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Floating Customer Review Teaser */}
-        <div className="hero-floating-card">
-          <div className="hero-floating-stars">★★★★★</div>
-          <p className="hero-floating-quote">
-            "My apartment has never looked or smelled so fresh. CleanPro was punctual, meticulous, and professional!"
-          </p>
-          <div className="hero-floating-author">
-            <span>✓ Verified Client</span> • <span>Sara M., Bole</span>
-          </div>
         </div>
       </section>
 

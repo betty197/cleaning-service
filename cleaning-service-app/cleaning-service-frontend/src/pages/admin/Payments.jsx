@@ -80,6 +80,7 @@ export default function Payments() {
                     <th>Customer</th>
                     <th>Amount</th>
                     <th>Method</th>
+                    <th>Account</th>
                     <th>Status</th>
                     <th>Payment Date</th>
                     <th>Actions</th>
@@ -95,6 +96,7 @@ export default function Payments() {
                         <td>{item.customer_name || "—"}</td>
                         <td><strong>{item.amount ?? "—"} ETB</strong></td>
                         <td>{item.payment_method || "Cash"}</td>
+                        <td>{item.payment_account || item.account_type || "—"}</td>
                         <td><StatusBadge status={item.payment_status} /></td>
                         <td>{item.payment_date || "—"}</td>
                         <td>
