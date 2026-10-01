@@ -27,8 +27,8 @@ export const SERVICE_IMAGE_PRESETS = [
     id: "office",
     name: "Office & Commercial Cleaning",
     keywords: ["office", "commercial", "corporate", "workplace", "business", "desk", "building"],
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80",
-    description: "Professional corporate office and workspace care"
+    image: "https://images.pexels.com/photos/5882568/pexels-photo-5882568.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description: "Cleaner wiping an office desk beside a computer"
   },
   {
     id: "carpet",
