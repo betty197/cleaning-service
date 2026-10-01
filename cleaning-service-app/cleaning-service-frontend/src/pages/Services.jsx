@@ -39,7 +39,7 @@ const fallbackServices = [
     description: "Professional cleaning for desks, meeting areas, and shared corporate office spaces.",
     price: 2000,
     duration_hours: 3,
-    image: "https://www.google.com/imgres?q=office%20cleaning%20images%20free&imgurl=https%3A%2F%2Ft4.ftcdn.net%2Fjpg%2F03%2F31%2F71%2F05%2F360_F_331710552_7G0PEmWZYDIoJvwXvuS4DPeishwCvqDs.jpg&imgrefurl=https%3A%2F%2Fstock.adobe.com%2Fsearch%3Fk%3Doffice%2Bcleaning&docid=wHqTAZBMVj2UCM&tbnid=J9xlX2mvrUuHZM&vet=12ahUKEwj63-Cn5ZWXAxVhQ_EDHULiMrQQnPAOegUIhgEQAA..i&w=539&h=360&hcb=2&ved=2ahUKEwj63-Cn5ZWXAxVhQ_EDHULiMrQQnPAOegUIhgEQAA",
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80",
     status: "Business"
   }
 ];
